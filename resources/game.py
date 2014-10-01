@@ -40,6 +40,8 @@ from rabbit.all import (
 	re
 	)
 import socket
+import random
+from collections import deque
 
 try:
 	import hackergen.phrasegen as hackergen
@@ -181,7 +183,7 @@ class card(object):
 def getcards(filenames, black=False):
 	cards = []
 	for name in filenames:
-	f = fakeFile()
+		f = None
 		try:
 			f = openfile(name, "rb")
 			for line in readfile(f).splitlines():
@@ -221,47 +223,63 @@ class ircbot():
 		self.messagehandler = messagehandler
 
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.connect(ip, port)
+		self.socket.connect((ip, port))
 		self.socket.send("USER " + (nick + " ") * 3 + ": This bot is for playing cards against the brotherhood\n")
 		self.socket.send("NICK " + nick + "\n")
 		self.socket.send("JOIN " + channel + "\n")
 
 	def send(self, message):
+		print(message)
 		self.socket.send("PRIVMSG " + self.channel + " :" + message + "\n")
 
 	def psend(self, nick, message):
 		self.socket.send("PRIVMSG " + nick + " :" + message + "\n")
 	
 	def pong(self):
-		self.socket.send("PONG :pingis")
+		self.socket.send("PONG :pingis\n")
 
 	def recv(self, length):
 		data = self.socket.recv(length)
-		parts = data.split(':')
-		dtype = parts[0].split(' ')[0]
-		message = parts[-1].strip("\r\n")
-		return dtype,message
-
+		print(data)
+		match = re.match(r':(.+?)\s+(.+?)\s+.*?:(.+)\s*', data)
+		if match:
+			sender = match.group(1).split('!')[0]
+			dtype = match.group(2)
+			message = match.group(3)
+			return dtype, sender, message
+		elif re.match(r'^PING', data):
+			return 'PING', ' ', ' '
+		return False, False, False
+		
 	def update(self):
-		dtype,sender,message = recv(2048)
-		if dtype == "PRIVMSG" and message.find(self.prefix) == 0:
-			self.messagehandler(message.split(self.prefix,maxsplit=1)[0])
-		elif dtype == ping:
+		dtype,sender,message = self.recv(2048)
+		if not dtype or not sender or not message:
+			return #abort
+		if dtype == "PRIVMSG" and message.startswith(self.prefix):
+			self.messagehandler(self, sender, message[(len(self.prefix)):].strip())
+		elif dtype == 'PING':
 			self.pong()
 
 	def run(self):
 		while True:
-			update()
+			self.update()
 					
 class main():
 
-	# fake functions
-	def start(self):
-		self.begin()
-	def printdebug(self, string):
-		pass
+	def cenumerate(self, sender):
+		l = self.playercards[sender]
+		ls = ''
+		for i in range(len(l)):
+			ls += "%s. '%s', " % (str(i),str(l[i]))
+		return ls
 
-	def __init__(self, server,
+	def senumerate(self):
+		ls = ''
+		for k in self.playerscores.keys():
+			ls += "%s: %s, " % (k,str(self.playerscores[k]))
+		return ls
+
+	def __init__(self,
 		name="Cards Against the Brotherhood",
 		message="Initializing...",
 		speed=400,
@@ -271,4 +289,144 @@ class main():
 		cards=10,
 		debug=False):
 
-main(True).start()
+		self.whites = whites
+		self.blacks = blacks
+
+		self.cards = cards
+
+		self.whitecards = getcards(whites)
+		self.blackcards = getcards(blacks, black=True)
+		random.shuffle(self.whitecards)
+		random.shuffle(self.blackcards)
+
+		self.roundcards = {}
+		self.playercards = {}
+		self.playerscores = {}
+		self.playerlist = []
+		self.state = 'idle'
+
+	def reset(self):
+		self.roundcards = {}
+		self.playercards = {}
+		self.playerscores = {}
+		self.playerlist = []
+		self.state = 'idle'
+
+		self.whitecards = getcards(self.whites)
+		self.blackcards = getcards(self.blacks, black=True)
+		random.shuffle(self.whitecards)
+		random.shuffle(self.blackcards)
+	
+	def prepareplayers(self):
+		self.playerlist = deque(self.playercards.keys())
+
+	def newcardczar(self):
+		self.playerlist.rotate(1)
+		self.cardczar = self.playerlist[0]
+		return self.cardczar
+
+	def allplayed(self):
+		for p in self.playerlist:
+			if not p == self.cardczar:
+				if not p in self.roundcards:
+					return False
+				if len(self.roundcards[p]) < self.blackcard.blanks:
+					return False
+		return True
+	
+	def givecards(self, sender, num):
+		self.playercards[sender].extend([ self.whitecards.pop() for i in range(num) ])
+
+	def handlemessage(self, bot, sender, message):
+
+		if message == 'abort':
+			bot.send('Game aborted by %s.' % (sender))
+			self.reset()
+
+		if message == 'prepare' and self.state == 'idle':
+			bot.send('Preparing for a game. type: "%s join" to join in.' % (bot.prefix))
+			self.state = 'join'
+			
+		if message == 'join' and self.state == 'join':
+			bot.send('%s has joined the game.' % (sender))
+			self.playercards[sender] = []
+			self.playerscores[sender] = 0
+			self.givecards(sender, self.cards)
+	
+		if message == 'start' and self.state == 'join':
+			# begin the game
+			if len(self.playercards.keys()) < 3:
+				bot.send('Not enough players to start.')
+				return
+			bot.send('Starting the game. Too late to join now.')
+			self.state = 'play'
+			self.prepareplayers()
+			self.startround(bot)
+
+		# in game commands
+		if self.state == 'play':
+
+			if message == 'cards':
+				bot.psend(sender, self.cenumerate(sender))
+
+			if message.startswith('play') and not sender == self.cardczar:
+				self.playcard(bot, sender, message)
+
+		if message.startswith('pick') and self.state == 'pick' and sender == self.cardczar:
+			self.pickcard(bot, message)
+
+	def startround(self, bot):
+		cardczar = self.newcardczar()	
+		self.roundcards = {}
+		self.blackcard = self.blackcards.pop()			
+		bot.send('the card czar is %s, and the black card is: "%s." Play your cards.' % (cardczar, str(self.blackcard)))
+		for k in self.playerlist:
+			bot.psend(k, self.cenumerate(k))
+
+	# don't mind this function
+	def cardlisttostr(self, v):
+		return ', '.join([ str(c) for c in v ])
+
+	def pickround(self, bot):
+		for k in self.roundcards.keys():
+			self.givecards(k, self.blackcard.blanks)
+		choices = ''
+		for v in self.roundcards.values():
+			choices += '[%s], ' % (self.cardlisttostr(v))
+		bot.send('Time to choose, %s. Your choices are: %s. The card is "%s."' % (self.cardczar, choices, str(self.blackcard)))
+
+	def playcard(self, bot, sender, message):
+		index = 0
+		try:
+			index = int(message.split(' ')[1])
+		except:
+			bot.psend(sender, 'invalid index: \'%s\'. Try using the \'cards\' command.' % (message))
+			return	
+		whitecard = self.playercards[sender][index]
+		if not sender in self.roundcards:
+			self.roundcards[sender] = [whitecard]
+		elif len(self.roundcards[sender]) < self.blackcard.blanks:
+			self.roundcards[sender].append(whitecard)
+		else:
+			bot.psend(sender, 'You\'ve already played enough cards.')
+			return
+		self.playercards[sender].pop(index)
+
+		bot.psend(sender, 'You have played "%s"' % (str(whitecard)))
+
+		if self.allplayed():
+			self.state = 'pick'
+			self.pickround(bot)
+
+	def pickcard(self, bot, message):
+		match = message[len('pick'):].strip()
+		for k in self.roundcards.keys():
+			for v in self.roundcards[k]:
+				if str(v).startswith(match):
+					self.playerscores[k] += 1
+					bot.send('The winner of this round is %s, with [%s]. Our current scores are: %s' %
+						(k, self.cardlisttostr(self.roundcards[k]), self.senumerate()))
+					self.state = 'play'
+					self.startround(bot)
+					return
+		bot.psend(self.cardczar, 'Please enter a valid choice.')
