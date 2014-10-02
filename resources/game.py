@@ -377,7 +377,10 @@ class main():
 			if message == 'cards':
 				bot.psend(sender, self.cenumerate(sender))
 
-			if message.startswith('play') and not sender == self.cardczar:
+			if message.startswith('play'):
+				if (sender == self.cardczar):
+					bot.psend(sender, 'You can\'t play any cards; you\'re the card czar.')
+					return
 				self.playcard(bot, sender, message)
 
 		if message.startswith('pick') and self.state == 'pick' and sender == self.cardczar:
