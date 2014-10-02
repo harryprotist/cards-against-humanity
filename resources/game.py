@@ -337,6 +337,11 @@ class main():
 	def givecards(self, sender, num):
 		self.playercards[sender].extend([ self.whitecards.pop() for i in range(num) ])
 
+	def helpmessage(self):
+		return 'To see your cards, type \'cab cards\'. To play your card, type \'cab play <card index>\'. If you\'re card czar,\
+			pick the winning card by typing \'cab pick <beginning of winning card>\'. To kill the game and ruin everyone\'s\
+			fun, type \'cab abort\'.'
+
 	def handlemessage(self, bot, sender, message):
 
 		if message == 'abort':
@@ -362,6 +367,9 @@ class main():
 			self.state = 'play'
 			self.prepareplayers()
 			self.startround(bot)
+
+		if message == 'help':
+			bot.psend(sender, self.helpmessage())
 
 		# in game commands
 		if self.state == 'play':
