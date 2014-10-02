@@ -379,7 +379,7 @@ class main():
 		cardczar = self.newcardczar()	
 		self.roundcards = {}
 		self.blackcard = self.blackcards.pop()			
-		bot.send('the card czar is %s, and the black card is: "%s." Play your cards.' % (cardczar, str(self.blackcard)))
+		bot.send('The card czar is %s, and the black card is: "%s." Play your cards.' % (cardczar, str(self.blackcard)))
 		for k in self.playerlist:
 			bot.psend(k, self.cenumerate(k))
 
@@ -400,7 +400,7 @@ class main():
 		try:
 			index = int(message.split(' ')[1])
 		except:
-			bot.psend(sender, 'invalid index: \'%s\'. Try using the \'cards\' command.' % (message))
+			bot.psend(sender, 'Invalid index: \'%s\'. Try using the \'cards\' command.' % (message))
 			return	
 		whitecard = self.playercards[sender][index]
 		if not sender in self.roundcards:
