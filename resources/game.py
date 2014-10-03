@@ -353,13 +353,15 @@ class main():
 			self.state = 'join'
 			
 		if message == 'join':
-			bot.send('%s has joined the game.' % (sender))
 			self.playercards[sender] = []
 			self.playerscores[sender] = 0
 			self.givecards(sender, self.cards)
 			if state == 'play' or state == 'pick':
+				bot.send('%s has joined the game. Resetting this round.' % (sender))
 				self.playerlist.push(sender)
 				self.resetround()
+				return
+			bot.send('%s has joined the game.' % (sender))
 		
 		if message == 'leave':
 			bot.send('%s is leaving the game.' % (sender))
