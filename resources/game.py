@@ -432,7 +432,7 @@ class main():
 	def playcard(self, bot, sender, message):
 		index = 0
 		try:
-			index = int(message.split(' ')[1])
+			index = int(message[len('play'):].strip())
 		except:
 			bot.psend(sender, 'Invalid index: \'%s\'. Try using the \'cards\' command.' % (message))
 			return	
