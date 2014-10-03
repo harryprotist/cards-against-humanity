@@ -357,6 +357,10 @@ class main():
 			self.playercards[sender] = []
 			self.playerscores[sender] = 0
 			self.givecards(sender, self.cards)
+		
+		if message == 'leave':
+			bot.send('%s is leaving the game.' % (sender))
+			self.removeplayer(sender)
 	
 		if message == 'start' and self.state == 'join':
 			# begin the game
@@ -385,6 +389,9 @@ class main():
 
 		if message.startswith('pick') and self.state == 'pick' and sender == self.cardczar:
 			self.pickcard(bot, message)
+
+	def removeplayer(self, sender):
+			
 
 	def startround(self, bot):
 		cardczar = self.newcardczar()	
