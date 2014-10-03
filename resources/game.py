@@ -352,11 +352,14 @@ class main():
 			bot.send('Preparing for a game. type: "%s join" to join in.' % (bot.prefix))
 			self.state = 'join'
 			
-		if message == 'join' and self.state == 'join':
+		if message == 'join':
 			bot.send('%s has joined the game.' % (sender))
 			self.playercards[sender] = []
 			self.playerscores[sender] = 0
 			self.givecards(sender, self.cards)
+			if state == 'play' or state == 'pick':
+				self.playerlist.push(sender)
+				self.resetround()
 		
 		if message == 'leave':
 			bot.send('%s is leaving the game.' % (sender))
@@ -395,8 +398,15 @@ class main():
 		del self.playerscores[sender]
 		if self.state == 'play' or self.state == 'pick': 
 			self.playerlist.remove(sender)
-			self.roundcards = {}
 			bot.send('Skipping the remainder of this round.')
+			self.resetround()
+	
+	def resetround(self):
+			for k in self.playercards.keys():
+				if len(self.playercards[k]) < self.cards:
+					self.givecards(k, self.cards - len(self.playercards[k]))
+			self.state = 'play'
+			self.roundcards = {}
 			self.startround(bot)
 
 	def startround(self, bot):
