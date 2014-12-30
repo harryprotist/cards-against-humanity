@@ -14,9 +14,9 @@ for the server ip, port, and channel name (including the #), in that order.
 ## Commands:
 * `cab prepare` - sets the bot to 'join' mode, where players can join
 * `cab join` - joins the game, if the bot is in 'join' mode
-* `cab play <number>` - plays the card with the number <number>. Note: after playing a card, your other cards' numbers may change.
+* `cab play <number>` eg. `cab play 5` - plays the card with the number <number>. Note: after playing a card, your other cards' numbers may change.
 * `cab cards` - tells the bot to PM you your cards. Note: it will PM you your cards automatically at the start of each round.
-* `cab pick <beginning of card name>` - for the card czar, when it's time to pick a card. Case sensitive.
+* `cab pick <beginning of card name>` eg. `cab pick Na` - for the card czar, when it's time to pick a card. Case sensitive.
 * `cab abort` - ends the game.
 
 ## Installation Instructions:
