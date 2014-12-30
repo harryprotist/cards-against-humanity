@@ -429,7 +429,7 @@ class main():
 		choices = ''
 		for v in self.roundcards.values():
 			choices += '[%s], ' % (self.cardlisttostr(v))
-		bot.send('Time to choose, %s. Your choices are: %s. The card is "%s."' % (self.cardczar, choices, str(self.blackcard)))
+		bot.send('Time to choose, %s. The card is "%s." Your choices are: %s.' % (self.cardczar, str(self.blackcard), choices))
 
 	def playcard(self, bot, sender, message):
 		index = 0
