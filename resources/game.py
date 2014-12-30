@@ -356,7 +356,7 @@ class main():
 			self.playercards[sender] = []
 			self.playerscores[sender] = 0
 			self.givecards(sender, self.cards)
-			if state == 'play' or state == 'pick':
+			if self.state == 'play' or self.state == 'pick':
 				bot.send('%s has joined the game. Resetting this round.' % (sender))
 				self.playerlist.push(sender)
 				self.resetround()
@@ -433,12 +433,13 @@ class main():
 
 	def playcard(self, bot, sender, message):
 		index = 0
+		whitecard = None
 		try:
 			index = int(message[len('play'):].strip())
+			whitecard = self.playercards[sender][index]
 		except:
 			bot.psend(sender, 'Invalid index: \'%s\'. Try using the \'cards\' command.' % (message))
 			return	
-		whitecard = self.playercards[sender][index]
 		if not sender in self.roundcards:
 			self.roundcards[sender] = [whitecard]
 		elif len(self.roundcards[sender]) < self.blackcard.blanks:
