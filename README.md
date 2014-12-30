@@ -8,7 +8,7 @@ Only one person needs to run the bot, and the rest of the players can
 connect through the IRC server, controlling the game by private messaging
 commands to the bot.
 
-In order to run the bot, CardGame.py must be run with commandline arguments
+In order to run the bot, CardGame.bat (Windows) or CardGame.sh (Mac/Linux) must be run with commandline arguments
 for the server ip, port, and channel name (including the #), in that order.
 
 ## Commands:
