@@ -450,6 +450,8 @@ class main():
 		self.playercards[sender].pop(index)
 
 		bot.psend(sender, 'You have played "%s"' % (str(whitecard)))
+		if self.blackcard.blanks > 1:
+			bot.psend(sender, 'Your cards are now: %s' % (self.cenumerate(sender)))
 
 		if self.allplayed():
 			self.state = 'pick'
