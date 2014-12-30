@@ -461,7 +461,7 @@ class main():
 		match = message[len('pick'):].strip()
 		for k in self.roundcards.keys():
 			for v in self.roundcards[k]:
-				if str(v).startswith(match):
+				if str(v).lower().startswith(match.lower()):
 					self.playerscores[k] += 1
 					bot.send('The winner of this round is %s, with [%s]. Our current scores are: %s' %
 						(k, self.cardlisttostr(self.roundcards[k]), self.senumerate()))

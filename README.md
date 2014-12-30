@@ -16,7 +16,7 @@ for the server ip, port, and channel name (including the #), in that order.
 * `cab join` - joins the game, if the bot is in 'join' mode
 * `cab play <number>` eg. `cab play 5` - plays the card with the number &lt;number&gt;. Note: after playing a card, your other cards' numbers may change.
 * `cab cards` - tells the bot to PM you your cards. Note: it will PM you your cards automatically at the start of each round.
-* `cab pick <beginning of card name>` eg. `cab pick Na` - for the card czar, when it's time to pick a card. Case sensitive.
+* `cab pick <beginning of card name>` eg. `cab pick na` - for the card czar, when it's time to pick a card. Case insensitive.
 * `cab abort` - ends the game.
 
 ## Installation Instructions:
