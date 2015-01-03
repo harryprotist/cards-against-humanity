@@ -24,10 +24,7 @@ for the server ip, port, and channel name (including the #), in that order.
 
 1. Download and install Python 2.7.8:
 	* https://www.python.org/download/releases/2.7.8/
-2. Download and unzip the latest version of Rabbit:
-	* https://github.com/evhub/rabbit/releases/latest
-3. Drag the "rabbit" folder into the "resources" folder
-4. Run the CardGame executable file:
+2. Run the CardGame executable file:
 	* "CardGame.bat" on Windows
 	* "CardGame.sh" on Unix (Mac, Linux, etc.)
 

@@ -17,30 +17,10 @@
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 from __future__ import with_statement, unicode_literals, print_function
-from rabbit.all import (
-	str,
-	print,
-	serverbase,
-	strlist,
-	random,
-	readfile,
-	openfile,
-	basicformat,
-	superformat,
-	isreal,
-	islist,
-	Tkinter,
-	console,
-	entry,
-	rootbind,
-	formatisyes,
-	formatisno,
-	madeof,
-	containsany,
-	re
-	)
+from rabbit.all import basicformat
 import socket
 import random
+import re
 from collections import deque
 
 try:
@@ -185,29 +165,29 @@ def getcards(filenames, black=False):
 	for name in filenames:
 		f = None
 		try:
-			f = openfile(name, "rb")
-			for line in readfile(f).splitlines():
-				line = basicformat(line)
-				if line and not line.startswith("#"):
-					if line.endswith(":"):
-						if len(line) > 1 and line[-2] == "\\":
-							line = line[:-2]+line[-1]
-						else:
-							continue
-					elif not black and line.endswith(".") and len(line) > 1:
-						if line[-2] == "\\":
-							if len(line) > 2 and line[-3] == "\\":
-								line = line[:-2]
-							else:
+			with open(name) as f:
+				for line in f:
+					line = line.strip()
+					if line and not line.startswith("#"):
+						if line.endswith(":"):
+							if len(line) > 1 and line[-2] == "\\":
 								line = line[:-2]+line[-1]
-						elif not containsany(line[:-1], ["!", "?", "."]):
-							line = line[:-1]
-					line = line.replace("\\n", "\n").replace("\\\n", "\\n")
-					cards.append(card(line, black))
-					if black:
-						cards[-1].black()
-					else:
-						cards[-1].white()
+							else:
+								continue
+						elif not black and line.endswith(".") and len(line) > 1:
+							if line[-2] == "\\":
+								if len(line) > 2 and line[-3] == "\\":
+									line = line[:-2]
+								else:
+									line = line[:-2]+line[-1]
+							elif not "!" in line[:-1] or "?" in line[:-1] or "." in line[:-1]:
+								line = line[:-1]
+						line = line.replace("\\n", "\n").replace("\\\n", "\\n")
+						cards.append(card(line, black))
+						if black:
+							cards[-1].black()
+						else:
+							cards[-1].white()
 		except IOError:
 			print("WARNING: Unable to find file "+str(name))
 		finally:
