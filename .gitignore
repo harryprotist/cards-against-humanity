@@ -60,3 +60,6 @@ Thumbs.db
 
 # Hackergen
 hackergen
+
+# Rabbit
+resources/rabbit
