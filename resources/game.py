@@ -426,10 +426,13 @@ class main():
 	def pickround(self, bot):
 		for k in self.roundcards.keys():
 			self.givecards(k, self.blackcard.blanks)
-		choices = ''
-		for v in self.roundcards.values():
-			choices += '[%s], ' % (self.cardlisttostr(v))
-		bot.send('Time to choose, %s. The card is "%s." Your choices are: %s.' % (self.cardczar, str(self.blackcard), choices))
+	
+		choices = self.roundcards.values()
+		random.shuffle(choices)
+		choicemessage = ''	
+		for v in choices:
+			choicemessage += '[%s], ' % (self.cardlisttostr(v))
+		bot.send('Time to choose, %s. The card is "%s." Your choices are: %s.' % (self.cardczar, str(self.blackcard), choicemessage))
 
 	def playcard(self, bot, sender, message):
 		index = 0
