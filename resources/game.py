@@ -401,7 +401,7 @@ class main():
 
 	# don't mind this function
 	def cardlisttostr(self, v):
-		return ', '.join([ str(c) for c in v ])
+		return '; '.join([ str(c) for c in v ])
 
 	def pickround(self, bot):
 		for k in self.roundcards.keys():
