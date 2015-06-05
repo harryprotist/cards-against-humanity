@@ -50,9 +50,9 @@ Group Jokes:
 	Cat GIFs.
 	An extra-large bro-tank.
 	A tiger with a mane.
-	Being short. 
-	Being tall. 
-	Show tunes. 
+	Being short.
+	Being tall.
+	Show tunes.
 	Lemons.
 	Yolo Swaggins.
 	A pirate ship with legs.
@@ -69,6 +69,8 @@ Group Jokes:
 	Being sexiled.
 	Second semester.
 	Reverse cow.
+    Sqweegel.
+    Seductive water drinking.
 
 DnD:
 	Brew's Lie.
@@ -129,6 +131,17 @@ DnD:
 	Being a footstool.
 	Having Amnesia.
 	Mr. Tumnus.
+	Sex dragons.
+	Mage's magnificent mansion.
+	An eldritch monstrosity made of tentacles.
+    Matriarch.
+    Mangela.
+    Tangela.
+    Rangela.
+    Ivan the Terrible.
+    Rollangela.
+    Cramgela.
+    Handgela.
 
 Anime:
 	Unlimited airplane works.
@@ -173,6 +186,8 @@ Games:
 	The Spy.
 	A portal gun.
 	Pyrovision.
+    JARAXXUS.
+    Nerdstone.
 
 Other Shows:
 	Twan.
@@ -198,6 +213,19 @@ Other Shows:
 	SCARING THE LITTLE GIRL!?!
 	Troll toll.
 	Sulphagne.
+	Differential equation slopes.
+	Channing Potatum.
+	FOR PROFIT!
+	Bee wings.
+	Gravity boots.
+    Stirling Archer.
+    Kung Fury.
+    Kung Fuhrer.
+    Triceracop.
+    Thor's pecs.
+    Barbarianna.
+    Hackerman.
+    The Hoff-9000.
 
 Politics, Math, Science, and History:
 	Canadians.
